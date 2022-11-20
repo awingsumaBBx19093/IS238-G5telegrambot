@@ -2,7 +2,7 @@
 
 #### install required Python modules
 ```bash
-pip install pipenv
+pip install imap-tools
 pip install python-telegram-bot  
 pip install pyyaml
 ```
