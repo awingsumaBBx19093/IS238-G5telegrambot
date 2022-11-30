@@ -1,13 +1,10 @@
 credentials:
   imap:
     server: 'imap.gmail.com'
-    username: 'email@example.com'
-    password: 'password'
+    username: 'XXXX@up.edu.ph'
+    password: 'XXXXXXXXXXXX'
   telegram:
-    token: 'chatbot-token'
+    token: 'xxxxxx:AAEasasasa28'
 
 email-fetching:
   folder: "INBOX"
-
-
-

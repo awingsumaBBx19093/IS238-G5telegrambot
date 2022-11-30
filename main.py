@@ -1,5 +1,6 @@
 import yaml
 from email_fetcher import EmailFetcher
+from email_sender import EmailSender
 from tg_bot import TgBot
 
 # Load application.yaml
@@ -18,6 +19,17 @@ email_folder_to_fetch = app_config["email-fetching"]["folder"]
 email_fetcher = EmailFetcher(imap_server, imap_username, imap_password)
 last_fetch_uid = 0
 
+#TODO: Change the third parameter to the email address you want to send the message to
+email_sender = EmailSender(imap_username, imap_password, imap_username)
+
+# Create handler to send message
+def send_message(update, context):
+    message = update.message.text
+    first_name = update.message.chat.first_name
+    last_name = update.message.chat.last_name
+    id =  update.message.chat.id
+    email_sender.send(f'{first_name} {last_name} - {id}', message)
+
 
 # Create handlers
 def fetch_unread_messages(update, context):
@@ -27,7 +39,7 @@ def fetch_unread_messages(update, context):
         update.message.reply_text('No unread messages.')
     else:
         for msg in msgs:
-            msg_to_display = f'Date: {msg.date_str}\n Subject: {msg.subject}\n From: {msg.from_}\n Message: {msg.text}'
+            msg_to_display = f'Subject: {msg.subject}\n From: {msg.from_}\n Message: {msg.text}'
             print(msg_to_display)
             update.message.reply_text(msg_to_display)
             last_fetch_uid = int(msg.uid)
@@ -35,12 +47,9 @@ def fetch_unread_messages(update, context):
 
 # Create instance of bot components and start it
 def main():
-    tg_bot = TgBot(tg_token, fetch_unread_messages)
-    tg_bot.start()
+    bot = TgBot(tg_token, fetch_unread_messages, send_message)
+    bot.send_message()
 
 
 if __name__ == '__main__':
     main()
-
-
-

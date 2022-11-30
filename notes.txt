@@ -1,0 +1,9 @@
+TODO:
+- Takes longer to pull unread email if payload is bigger
+- App needed to restart app on changes
+- Do we need case this into python framework to deploy?
+- Needs to Auto sink the INBOX to the bot for unread message
+
+Task Done:
+- Coded Sent email from telegrambot 
+- incorporates Alvin's initial code to pull unread email from Inbox
