@@ -2,6 +2,7 @@ import smtplib
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
+
 class EmailSender:
     def __init__(self, imap_config):
         self.sender_email = imap_config.username
