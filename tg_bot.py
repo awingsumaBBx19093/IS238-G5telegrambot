@@ -2,34 +2,33 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
 
 class TgBot:
-    def __init__(self, token, start_handler, message_handler):
-        self.token = token
-        self.start_handler = start_handler
+    def __init__(self, config, email_fetcher, message_handler):
+        self.config = config
+        self.email_fetcher = email_fetcher
         self.message_handler = message_handler
 
     def start(self):
-        updater = Updater(self.token, use_context=True)
+        updater = Updater(self.config.credentials_config.telegram_config.token, use_context=True)
         dp = updater.dispatcher
 
-        dp.add_handler(CommandHandler("start", self.start_handler))
-        # dp.add_handler(MessageHandler(Filters.text, self.send_message))
-
-        dp.add_error_handler(error)
-
-        updater.start_polling()
-        updater.idle()
-
-    def send_message(self):
-        updater = Updater(self.token, use_context=True)
-        dp = updater.dispatcher
-
-        dp.add_handler(CommandHandler("start", self.start_handler))
+        dp.add_handler(CommandHandler("start", self._fetch_unread_emails))
         dp.add_handler(MessageHandler(Filters.text, self.message_handler))
 
         dp.add_error_handler(error)
 
         updater.start_polling()
         updater.idle()
+
+    def _fetch_unread_emails(self, update, context):
+        self.email_fetcher.fetch_unread_emails(
+            self.config.email_fetching_config.folder,
+            lambda msg_to_display: self._display_message(update, msg_to_display)
+        )
+
+    def _display_message(self, update, msg):
+        msg_to_display = f'Subject: {msg.subject}\n From: {msg.from_}\n Message: {msg.text}'
+        print(msg_to_display)
+        update.message.reply_text(msg_to_display)
 
 
 def error(update, context):
