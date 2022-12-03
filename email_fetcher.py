@@ -7,7 +7,6 @@ class EmailFetcher:
         self.username = username
         self.password = password
 
-    # Fetch unread emails
     def fetch_unread_emails(self, folder, start_uid):
         msgs = []
         with MailBox(self.imap_server).login(self.username, self.password, folder) as mailbox:
@@ -15,8 +14,6 @@ class EmailFetcher:
                 msgs.append(msg)
         return msgs
 
-
-    # fetch all emails in plain text - TEST
     def fetch_all_emails(self, folder):
         msgs = []
         with MailBox(self.imap_server).login(self.username, self.password, folder) as mailbox:
