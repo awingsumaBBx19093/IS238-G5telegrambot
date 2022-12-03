@@ -1,3 +1,5 @@
+import threading
+
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 
 
@@ -11,7 +13,7 @@ class TgBot:
         updater = Updater(self.config.credentials_config.telegram_config.token, use_context=True)
         dp = updater.dispatcher
 
-        dp.add_handler(CommandHandler("start", self._fetch_unread_emails))
+        dp.add_handler(CommandHandler("start", self._fetch_unread_emails_bg))
         dp.add_handler(MessageHandler(Filters.text, self.message_handler))
 
         dp.add_error_handler(error)
@@ -24,6 +26,10 @@ class TgBot:
             self.config.email_fetching_config.folder,
             lambda msg_to_display: self._display_message(update, msg_to_display)
         )
+
+    def _fetch_unread_emails_bg(self, update, context):
+        thread = threading.Thread(target=self._fetch_unread_emails, args=(update, context))
+        thread.start()
 
     def _display_message(self, update, msg):
         msg_to_display = f'Subject: {msg.subject}\n From: {msg.from_}\n Message: {msg.text}'
