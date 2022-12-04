@@ -1,7 +1,7 @@
 ## g5-telegramBot-IS238
 Group 5 Main Repository
 
-### Configuaration
+### Configuration
 
 #### Required Python modules
 ```bash
