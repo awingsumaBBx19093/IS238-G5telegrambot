@@ -2,9 +2,10 @@ import yaml
 
 
 class Config:
-    def __init__(self, credentials_config, email_fetching_config):
+    def __init__(self, credentials_config, email_fetching_config , send_email_config):
         self.credentials_config = credentials_config
         self.email_fetching_config = email_fetching_config
+        self.send_email_config = send_email_config
 
     @staticmethod
     def load():
@@ -26,6 +27,9 @@ class Config:
             ),
             EmailFetchingConfig(
                 app_config["email-fetching"]["folder"]
+            ),
+            sendEmailConfig(
+                app_config["send-email"]["subject"]
             ),
         )
 
@@ -51,3 +55,7 @@ class TelegramConfig:
 class EmailFetchingConfig:
     def __init__(self, folder):
         self.folder = folder
+
+class sendEmailConfig:
+    def __init__(self, subject):
+        self.subject = subject

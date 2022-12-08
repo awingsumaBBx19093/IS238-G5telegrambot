@@ -8,3 +8,6 @@ credentials:
 
 email-fetching:
   folder: "INBOX"
+
+send-email:
+  subject: 'Bot IS238 - Group 5'

@@ -7,3 +7,5 @@ TODO:
 Task Done:
 - Coded Sent email from telegrambot 
 - incorporates Alvin's initial code to pull unread email from Inbox
+
+*** Please refer to task created last meeting. Thanks
