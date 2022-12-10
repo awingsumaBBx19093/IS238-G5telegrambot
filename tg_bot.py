@@ -21,21 +21,28 @@ class TgBot:
         updater.start_polling()
         updater.idle()
 
+    
     def _fetch_unread_emails(self, update, context):
         self.email_fetcher.fetch_unread_emails(
-            self.config.email_fetching_config.folder,
-            lambda msg_to_display: self._display_message(update, msg_to_display)
-        )
+                self.config.email_fetching_config.folder,
+                lambda msg_to_display: self._display_message(update, msg_to_display)
+            )
 
     def _fetch_unread_emails_bg(self, update, context):
-        thread = threading.Thread(target=self._fetch_unread_emails, args=(update, context))
+        thread = threading.Thread(target=self._fetch_unread_emails, args=(update, context)) 
         thread.start()
 
     def _display_message(self, update, msg):
+        #  TODO: Database to store message id and subject
+        # This area here is for testing purposes
+        
         msg_to_display = f'Subject: {msg.subject}\n From: {msg.from_}\n Message: {msg.text}'
-        print(msg_to_display)
-        update.message.reply_text(msg_to_display)
+        
+        if update.message.reply_to_message:
+            update.message.reply_text(msg_to_display, reply_to_message_id=msg.subject)
 
+        else:
+            update.message.reply_text(msg_to_display, reply_to_message_id=msg.subject)
 
 def error(update, context):
     print(f'Update {update} caused error {context.error}')
