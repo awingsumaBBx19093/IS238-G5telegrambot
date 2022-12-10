@@ -10,7 +10,7 @@ class Config:
     @staticmethod
     def load():
         # Load application.yaml
-        with open('application.yaml') as config_file:
+        with open('./application.yaml') as config_file:
             config = config_file.read()
         app_config = yaml.load(config, Loader=yaml.FullLoader)
 
