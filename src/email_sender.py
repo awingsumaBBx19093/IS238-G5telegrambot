@@ -1,8 +1,11 @@
 import smtplib
 import email.utils
+import sqlite3
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 
+con = sqlite3.connect('chatbotDatabase.db', check_same_thread=False)
+cur = con.cursor()
 
 class EmailSender:
     def __init__(self, imap_config):
@@ -18,13 +21,26 @@ class EmailSender:
         msg['Subject'] = msg['Reply-To'] = subject
         msg.add_header("Message-ID", myid)
 
-        #  TODO: Database to store message id and subject
-        # This area here is for testing purposes
+        # Select the msgIDbot from tblMsgsLogs that corresponds to subject
+        cur.execute('''SELECT * FROM tblMsgsLogs where msgIDBot = ?''', (subject,))
 
-        testId2 = '<CADMDgSm+AcFQD+QEGF_YPtqLviE0Wsnmtof8DdMBzZrLrxTYgws@mail.gmail.com>' 
+        if cur.fetchone() is None:
 
-        msg.add_header("In-Reply-To", testId2)
-        msg.add_header("References", testId2)
+            msgIDEmail = email.utils.make_msgid()
+            # Insert the msgIDbot and msgIDemail into tblMsgsLogs
+            cur.execute('''INSERT INTO tblMsgsLogs (msgIDBot, msgIDEmail) VALUES (?, ?)''', (subject, msgIDEmail))
+            
+        else:
+            msgIDEmail = cur.fetchone()[1]
+            # Update the msgIDemail in tblMsgsLogs
+            cur.execute('''UPDATE tblMsgsLogs SET msgIDEmail = ? WHERE msgIDBot = ?''', (msgIDEmail, subject))
+            
+        # Execute the commands above
+        con.commit()
+        
+        if msgIDEmail:
+            msg.add_header("In-Reply-To", msgIDEmail)
+            msg.add_header("References", msgIDEmail)
 
         msg.attach(MIMEText(body, 'plain'))
 

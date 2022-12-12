@@ -2,9 +2,18 @@ from email_fetcher import EmailFetcher
 from email_sender import EmailSender
 from tg_bot import TgBot
 from config import Config
-import threading
+import sqlite3
+
+con = sqlite3.connect('chatbotDatabase.db', check_same_thread=False)
+cur = con.cursor()
+
+# Create table in database if tblMsgsLogs do not exists
+cur.execute('''CREATE TABLE IF NOT EXISTS tblMsgsLogs 
+                        (msgIDBot, msgIDEmail) ''')
 
 config = Config.load()
+
+con.commit()
 
 # Initialize required components and variables
 email_fetcher = EmailFetcher(config.credentials_config.imap_config)
@@ -14,8 +23,6 @@ subject = config.send_email_config.subject
 # Create handler to send message
 def send_message(update, context):
     message = update.message.text
-    print(update)
-
 
     id = update.message.message_id
     
@@ -29,6 +36,8 @@ def send_message(update, context):
 def main():
     tg_bot = TgBot(config, email_fetcher, send_message)
     tg_bot.start()
+    
+    
 
 if __name__ == '__main__':
     main()

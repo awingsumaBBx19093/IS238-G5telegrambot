@@ -1,6 +1,12 @@
 import threading
+import sqlite3
+import re
 
 from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+
+
+con = sqlite3.connect('chatbotDatabase.db', check_same_thread=False)
+cur = con.cursor()
 
 
 class TgBot:
@@ -15,7 +21,6 @@ class TgBot:
 
         dp.add_handler(CommandHandler("start", self._fetch_unread_emails_bg))
         dp.add_handler(MessageHandler(Filters.text, self.message_handler))
-
         dp.add_error_handler(error)
 
         updater.start_polling()
@@ -33,16 +38,26 @@ class TgBot:
         thread.start()
 
     def _display_message(self, update, msg):
-        #  TODO: Database to store message id and subject
-        # This area here is for testing purposes
-        
-        msg_to_display = f'Subject: {msg.subject}\n From: {msg.from_}\n Message: {msg.text}'
-        
-        if update.message.reply_to_message:
-            update.message.reply_text(msg_to_display, reply_to_message_id=msg.subject)
+        h_m_id = str(msg.headers.get('message-id')) 
+        h_m_id = re.sub('[(),\'\']', '', h_m_id )
+        reply_to = (str(msg.headers.get('reply-to')))
+        reply_to = re.sub('[(),\'\']', '', reply_to )
 
+        cur.execute('''INSERT INTO tblMsgsLogs values (?, ?)''', (reply_to, h_m_id))
+        con.commit()
+        
+        if len(msg.text) > 4096:
+            print('Message body is too long for the bot to display. Please click on the link below to view the message.')
+            print(f'https://mail.google.com/mail/u/0/#search/{msg.headers.get("message-id")}')
+
+
+        msg_to_display = f'From: {msg.from_}\nSubject: {msg.subject}\n\n{msg.text}'
+        print(msg_to_display)
+        
+        if update.message.reply_to_message: 
+            update.message.reply_text(msg_to_display, reply_to_message_id=msg.subject)
         else:
-            update.message.reply_text(msg_to_display, reply_to_message_id=msg.subject)
-
+            update.message.reply_text(msg_to_display)
+            
 def error(update, context):
     print(f'Update {update} caused error {context.error}')
