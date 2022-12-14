@@ -55,7 +55,7 @@ class TgBot:
         print(msg_to_display)
         
         if update.message.reply_to_message: 
-            update.message.reply_text(msg_to_display, reply_to_message_id=msg.subject)
+            update.message.reply_text(msg_to_display, reply_to_message_id=reply_to)
         else:
             update.message.reply_text(msg_to_display)
             
