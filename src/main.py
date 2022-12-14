@@ -22,7 +22,11 @@ subject = config.send_email_config.subject
 
 # Create handler to send message
 def send_message(update, context):
-    message = update.message.text
+    #get user name of the sender and and to the message body
+    user_first_name = update.message.from_user.first_name
+    user_last_name = update.message.from_user.last_name
+    
+    message = f'From: {user_first_name} {user_last_name} \n\n{update.message.text}' 
 
     id = update.message.message_id
     
