@@ -4,9 +4,17 @@
 ---
 ## Group 5 Main Repository
 
-### Configuration
 #### BOT Creation
-1. Create a new telegram bot with BotFather 
+1. Create a new telegram bot with BotFather. Open Telegram, search and open BotFather.
+2. Start a new conversation with BotFather
+
+xxxx
+
+xxxx
+
+
+
+### Configuration
 
 You can easily run your own instance of the bot. You can run on any OS (Windows, Mac or Linux). 
 
