@@ -45,13 +45,26 @@ class TgBot:
 
         cur.execute('''INSERT INTO tblMsgsLogs values (?, ?)''', (reply_to, h_m_id))
         con.commit()
-        
-        if len(msg.text) > 4096:
+
+        #if msg.size > 1000000, get only the first 1000000 bytes of the message
+        if msg.size > 1000000:
+            print('Message is too large for the bot to display. Please click on the link below to view the message.')
+            print(f'https://mail.google.com/mail/u/0/#search/{msg.headers.get("message-id")}')
+        #if msg.text is too long, get only the first 4096 bytes of the message
+        if msg.text is None:
+            print('Message body is empty. Please click on the link below to view the message.')
+            print(f'https://mail.google.com/mail/u/0/#search/{msg.headers.get("message-id")}')
+        elif len(msg.text) > 4096:
             print('Message body is too long for the bot to display. Please click on the link below to view the message.')
             print(f'https://mail.google.com/mail/u/0/#search/{msg.headers.get("message-id")}')
 
 
-        msg_to_display = f'From: {msg.from_}\nSubject: {msg.subject}\n\n{msg.text}'
+        # if message is too long, get only the first 1000 bytes of the message 
+        if len(msg.text) > 4096:
+            msg_to_display = f'From: {msg.from_}\nSubject: {msg.subject}\n\n{msg.text[:1000]}'
+        else:
+
+            msg_to_display = f'From: {msg.from_}\nSubject: {msg.subject}\n\n{msg.text}'
         print(msg_to_display)
         
         if update.message.reply_to_message: 
