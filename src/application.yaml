@@ -1,3 +1,6 @@
+# The below scripts are dedicated to user account credentials configuration.
+# For telegram to manage your bot, please remember to update the below credentials with your account information (username, google mail App password, and telegram bot API token).
+
 credentials:
   imap:
     server: 'imap.gmail.com'
