@@ -5,7 +5,8 @@ import traceback
 
 from imap_tools import MailBox, AND, A, U, MailboxLoginError, MailboxLogoutError
 
-
+# Declaration of EmailFetcher class, initializing user’s UP Gmail Inbox.
+# This script will retrieve the unread mails from Gmail Inbox and will display in telegram bot.
 class EmailFetcher:
     def __init__(self, imap_config):
         self.imap_config = imap_config
