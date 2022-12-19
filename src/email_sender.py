@@ -7,6 +7,7 @@ from email.mime.text import MIMEText
 con = sqlite3.connect('chatbotDatabase.db', check_same_thread=False)
 cur = con.cursor()
 
+# Declaration of EmailSender class, initializing user’s telegram bot. This script will send the information fed to the bot and will display in the user's UP Gmail inbox. Email responses to the same user and subject will be threaded.
 class EmailSender:
     def __init__(self, imap_config):
         self.sender_email = imap_config.username
