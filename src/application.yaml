@@ -4,10 +4,10 @@
 credentials:
   imap:
     server: 'imap.gmail.com'
-    username: 'XXXX@up.edu.ph'
-    password: 'XXXXXXXXXXXX'
+    username: 'acsumalinog1@up.edu.ph'
+    password: 'vukowxgiewonesav'
   telegram:
-    token: 'xxxxxx:AAEasasasa28'
+    token: '5975368646:AAFD_byJPZlrOzL4PgnQBPGuKksDKISYHV0'
 
 email-fetching:
   folder: "INBOX"
